@@ -42,7 +42,7 @@ const mustBeBetween = (eventObject, min, max) => {
 
 
 const difference = (a, b) => {
-  
+
   return Math.abs(a - b);
 };
 
