@@ -47,31 +47,4 @@ def grover(answers:list[int] = 0, num_of_qubits:int = 4, num_of_iterations:int =
                 raise Exception(job.result())
         time.sleep(10)
 
-    # Get values to probabilities map
-    counts = job.result().get_counts()
-    job.result().get_counts().keys()[0]
-    return(circuit)
-
-
-def main():
-    # Submit the job for execution
-
-    circuit = grover([9, 13], 4, 2)
-    print(circuit)
-    print(circuit.decompose())
-    job = backend.run(circuit.decompose(), shots=1)
-
-    # Poll for status till the job is done
-    while True:
-        status = job.status()
-        print(f"Job status is {status}")
-        match status:
-            case JobStatus.DONE:
-                break
-            case JobStatus.ERROR:
-                raise Exception(job.result())
-        time.sleep(10)
-
-    # Get values to probabilities map
-    counts = job.result().get_counts()
-    print(job.result())
+    return(job.result().get_counts().keys()[0])
