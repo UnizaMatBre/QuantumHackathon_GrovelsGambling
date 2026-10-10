@@ -23,8 +23,8 @@ let currentTokenBet = 500;
 let currentSwingBet = 25;
 let currentGains = 0;
 
-/// ----------------------------
-/// --- INPUT PANEL HANDLING ---
+
+/// --- TOOLS ----
 
 const mustBeBetween = (eventObject, min, max) => {
   const currentVal = Number(eventObject.target.value);
@@ -38,8 +38,18 @@ const mustBeBetween = (eventObject, min, max) => {
     eventObject.target.value = max;
     return;
   };
-  
 };
+
+
+const difference = (a, b) => {
+  
+  return Math.abs(a - b);
+};
+
+/// ----------------------------
+/// --- INPUT PANEL HANDLING ---
+
+
 
 
 const recalculateGains = () => {
@@ -73,10 +83,7 @@ SWING_BET_INPUT.addEventListener("change", (evt) => {
 
 const CHANGE_BY = 2;
 
-const difference = (a, b) => {
-  
-  return Math.abs(a - b);
-};
+
 
 const changeTokens = (newTokenCount) => {
   if(currentTokenCount == newTokenCount) {
