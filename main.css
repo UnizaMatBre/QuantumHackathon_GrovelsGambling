@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+}
+
+
+
+#gambling-machine-container {
+  display: flex;
+  flex-direction: column;
+  
+  width: 500px;
+  height: 500px;  
+}
+
+#token-panel {
+  border: 5px solid gold;
+  flex-basis: 10%;
+
+  display: flex;
+  flex-direction: row;
+
+  #token-wallet-output {
+    flex-grow: 1;
+    
+  }
+}
+
+#slot-panel {
+  border: 5px solid aqua;
+  flex-grow: 1;
+  
+  display: flex;
+  flex-direction: row;
+
+  #result-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  
+    flex-basis: 50%;
+
+    padding: 10px 5px 10px 25px;
+
+    output {
+      flex-grow: 1;
+    }
+  }
+  
+  #slot-reel-panel {
+    flex-basis: 50%;
+    border: 3px solid purple;
+  
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+
+
+}
+
+
+.reel-slot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 2em;
+
+  overflow: hidden;
+}
+
+.reel-digit {
+  
+}
+
+
+#control-panel {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 25px;
+  border: 5px solid red;
+
+  #bet-inputs-panel {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  #bet-inputs-panel input {
+    flex: 1 1 0;
+    min-width: 0;
+
+  }
+}
+
+
+
+
+.led-display {
+  border-width: : 2px;
+  border-radius: 10px;
+  border-color: rgb(255 0 0);
+  
+  display: inline-block;
+  padding: 12px 18px;
+  background: #111;
+  color: #ff3b30;
+
+  font: bold 1.25em "Courier New";
+  text-align: end;
+  vertical-align: center;
+}
+
+
+
+.ordinary-btn {
+  background: rgb(153 0 0);
+  border-radius: 10px;
+  padding: 0px;
+
+  span {
+    display: block;
+  
+    background: rgb(255 0 0);
+    color: white;
+  
+    padding: 10px 40px;
+    border-radius: 10px;
+    border: none;
+
+    
+    transform: translateY(-6px);
+    transition: transform 200ms;
+    
+  }
+}
+
+.ordinary-btn:active span {
+  transform: translateY(-1px);
+}
