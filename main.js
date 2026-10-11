@@ -12,6 +12,9 @@ const REEL_SLOT_2 = document.getElementById("reel-slot-2");
 const REEL_SLOT_3 = document.getElementById("reel-slot-3");
 const REEL_SLOTS = [REEL_SLOT_1, REEL_SLOT_2, REEL_SLOT_3];
 
+const STATUS_ANNOUCERS = [ ...document.getElementsByClassName("status-annoucment") ];
+const CORRECT_VALUE_OUTPUT = document.getElementById("correct-value-output");
+
 // contants
 const MAX_SWING_BET = 26;
 const MIN_SWING_BET = 1;
@@ -95,21 +98,35 @@ const changeTokens = (newTokenCount) => {
   const actualChangeBy = (currentTokenCount < newTokenCount) ? CHANGE_BY : -CHANGE_BY;
   let remainingDifference = difference(currentTokenCount, newTokenCount);
   
-  let intervalHandle = setInterval(() => {
-    currentTokenCount += actualChangeBy;
-    remainingDifference -= CHANGE_BY;
-    
-    if(remainingDifference <= 0) {
-      currentTokenCount = newTokenCount; 
-      
-      clearInterval(intervalHandle);
-    }
+  // this is here to allow us wait until we are done
+  const tokenChangePromise = new Promise((resolve) => {
 
-    TOKEN_WALLET_OUTPUT.value = currentTokenCount;
-  }, 10);
+
+    let intervalHandle = setInterval(() => {
+      currentTokenCount += actualChangeBy;
+      remainingDifference -= CHANGE_BY;
+      
+      if(remainingDifference <= 0) {
+        currentTokenCount = newTokenCount; 
+        
+        clearInterval(intervalHandle);
+        TOKEN_WALLET_OUTPUT.value = currentTokenCount;
+        resolve();
+      }
+
+      TOKEN_WALLET_OUTPUT.value = currentTokenCount;
+    }, 10);
+
+
+  });
+
+  return tokenChangePromise;
 }
 
+const changeTokensBy = (difference) => {
 
+  return changeTokens(currentTokenCount + difference);
+}
 
 /// ---------------------
 /// --- SPIN HANDLING ---
@@ -138,6 +155,13 @@ const rollNextTurn = () => {
 }
 
 
+const displayAnnoucment = (text) => {
+  STATUS_ANNOUCERS.forEach((oneAnnoucer) => {
+
+    oneAnnoucer.value = text;
+  });
+}
+
 
 const toggleInputs = (state) => {
   SPIN_BUTTON.disabled = state;
@@ -154,6 +178,7 @@ const spin = () => {
   const currentTurnData = rollNextTurn();
 
 
+  CORRECT_VALUE_OUTPUT.value = currentTurnData.targetAnswer;
 
 
   let intervalHandler = setInterval(() => {
@@ -188,6 +213,17 @@ const spin = () => {
     REEL_SLOTS.forEach((oneSlot, index) => {
       oneSlot.innerText = digits[index];
     });
+
+
+
+    if(groverFoundValue === currentTurnData.targetAnswer) {
+      displayAnnoucment("Y.O.U  W.O.N");
+      changeTokensBy(currentGains);
+    }
+    else {
+      displayAnnoucment("Y.O.U L.O.S.T");
+      changeTokensBy(-currentTokenBet);
+    }
 
 
   })
@@ -228,6 +264,8 @@ const init = () => {
   REEL_SLOTS.forEach((oneSlot, index) => {
     oneSlot.innerText = SLOT_INDEXES[index];
   });
+
+  displayAnnoucment("....")
   
   console.log("Initialized Successfuly");
 };
