@@ -1,3 +1,4 @@
+import { difference, mustBeBetween } from "./tools.js";
 import { run_grover } from "./grover_emulation.js";
 
 // component objects
@@ -31,25 +32,7 @@ let currentGains = 0;
 
 /// --- TOOLS ----
 
-const mustBeBetween = (eventObject, min, max) => {
-  const currentVal = Number(eventObject.target.value);
-  
-  if (currentVal < min) {
-    eventObject.target.value = min;
-    return;
-  };
 
-  if (currentVal > max) {
-    eventObject.target.value = max;
-    return;
-  };
-};
-
-
-const difference = (a, b) => {
-
-  return Math.abs(a - b);
-};
 
 /// ----------------------------
 /// --- INPUT PANEL HANDLING ---
