@@ -20,8 +20,8 @@
   flex-direction: row;
 
   #token-wallet-output {
-    flex-grow: 1;
-    
+    flex: 1;
+    min-height: 0;
   }
 }
 
@@ -33,17 +33,15 @@
   flex-direction: row;
 
   #result-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  
     flex-basis: 50%;
+
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
 
     padding: 10px 5px 10px 25px;
 
-    output {
-      flex-grow: 1;
-    }
+
   }
   
   #slot-reel-panel {
