@@ -162,6 +162,13 @@ const displayAnnoucment = (text) => {
   });
 }
 
+const clearAnnoucment = () => {
+  STATUS_ANNOUCERS.forEach((oneAnnoucer) => {
+
+    oneAnnoucer.value = "";
+  });
+}
+
 
 const toggleInputs = (state) => {
   SPIN_BUTTON.disabled = state;
@@ -174,6 +181,7 @@ let isSpinning = false;
 const spin = () => {
   isSpinning = true;
   toggleInputs(true);
+  clearAnnoucment();
 
   const currentTurnData = rollNextTurn();
 
@@ -265,7 +273,7 @@ const init = () => {
     oneSlot.innerText = SLOT_INDEXES[index];
   });
 
-  displayAnnoucment("....")
+  clearAnnoucment();
   
   console.log("Initialized Successfuly");
 };

@@ -120,6 +120,19 @@
   color: gray;
 }
 
+@keyframes brightness-pulse {
+  0%, 100% {
+    text-shadow: 0 0 0 transparent;
+  }
+  50% {
+    text-shadow: 0 0 8px currentColor;
+  }
+}
+
+
+.text-pulsing {
+  animation: brightness-pulse 0.5s ease-in-out infinite;
+}
 
 
 .ordinary-btn {
