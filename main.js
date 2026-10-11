@@ -212,7 +212,7 @@ const spin = () => {
 
 
     if(groverFoundValue === currentTurnData.targetAnswer) {
-      displayAnnoucment("Y.O.U  W.O.N");
+      displayAnnoucment("W.I.N");
 
       currentTokenCount += currentGains;
       gradualyChangeDisplayValue(
@@ -220,7 +220,7 @@ const spin = () => {
       );
     }
     else {
-      displayAnnoucment("Y.O.U L.O.S.T");
+      displayAnnoucment("L.O.S.S");
       
       currentTokenCount -= currentTokenBet;
       gradualyChangeDisplayValue(

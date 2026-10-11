@@ -112,6 +112,8 @@
   display: inline-flex;
   align-items: center; 
   justify-content: right;
+
+  letter-spacing: 10px;
 }
 
 .led-display:disabled {
