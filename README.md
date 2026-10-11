@@ -2,7 +2,7 @@
 
 > The world's first casino where the house edge is quantum mechanics.
 
-**Authors:** [Name 1], [Name 2], [Name 3]
+**Authors:** Martin Breznican, Vladimir Necasny, Oliver Graus, Gabriel Hospodarik
 
 ## Summary
 - Idea: while absorbing preliminary lessons before hackathon, we got an idea of implementing Grover's algorithm in a fun way - that it have a very "gambler-friendly" property in first ever existing quantum casino - idea by us - which functionality is defined more detailed in following steps.
