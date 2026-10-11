@@ -1,3 +1,4 @@
+import Config from "./config.js";
 import { difference, mustBeBetween } from "./tools.js";
 import { run_grover } from "./grover_emulation.js";
 
@@ -17,15 +18,10 @@ const REEL_SLOTS = [REEL_SLOT_1, REEL_SLOT_2, REEL_SLOT_3, REEL_SLOT_4];
 const STATUS_ANNOUCERS = [ ...document.getElementsByClassName("status-annoucment") ];
 const CORRECT_VALUE_OUTPUT = document.getElementById("correct-value-output");
 
-// contants
-const MAX_SWING_BET = 26;
-const MIN_SWING_BET = 1;
-const MIN_TOKEN_BET = 500;
-
 let SLOT_INDEXES = [3, 4, 7, 2];
 
 // values
-let currentTokenCount = 5000;
+let currentTokenCount = 0;
 let currentTokenBet = 500;
 let currentSwingBet = 25;
 let currentGains = 0;
@@ -53,14 +49,14 @@ const recalculateGains = () => {
 };
 
 TOKEN_BET_INPUT.addEventListener("change", (evt) => {
-  mustBeBetween(evt, MIN_TOKEN_BET, currentTokenCount);
+  mustBeBetween(evt, Config.MIN_TOKEN_BET, currentTokenCount);
 
   currentTokenBet = Number(evt.target.value);
   recalculateGains();
 });
 
 SWING_BET_INPUT.addEventListener("change", (evt) => {
-  mustBeBetween(evt, MIN_SWING_BET, MAX_SWING_BET);
+  mustBeBetween(evt, Config.MIN_SWING_BET, Config.MAX_SWING_BET);
 
   currentSwingBet = Number(evt.target.value);
   recalculateGains();
@@ -70,10 +66,6 @@ SWING_BET_INPUT.addEventListener("change", (evt) => {
 
 /// -------------------------------
 /// --- TOKEN COUNTER HANDLING ---
-
-
-const ITERATIONS = 50;
-const INTERVAL = 50;
 
 
 
@@ -95,22 +87,22 @@ const gradualyChangeDisplayValue = (elementObject, change) => {
       iteration++;
 
       let valueToDisplay = Math.round(
-        oldValue + (change * iteration) / ITERATIONS
+        oldValue + (change * iteration) / Config.ITERATIONS_COUNT
       );
 
-      if(iteration >= ITERATIONS) {
+      if(iteration >= Config.ITERATIONS_COUNT) {
         valueToDisplay = oldValue + change;
       }
 
       elementObject.value = valueToDisplay;
 
-      if (iteration >= ITERATIONS) {
+      if (iteration >= Config.ITERATIONS_COUNT) {
         clearInterval(intervalHandle);
         elementObject.classList.remove("text-pulsing");
         resolve();
       }
 
-    }, INTERVAL);
+    }, Config.INTERVAL_LENGHT_MS);
 
   });
 };
@@ -263,7 +255,10 @@ const init = () => {
   GAINS_OUTPUT.value = 0;
   recalculateGains();
 
-  TOKEN_WALLET_OUTPUT.value = currentTokenCount;
+  currentTokenCount = Config.STARTING_TOKEN_COUNT;
+  TOKEN_WALLET_OUTPUT.value = 0;
+  gradualyChangeDisplayValue(TOKEN_WALLET_OUTPUT, currentTokenCount);
+
 
   REEL_SLOTS.forEach((oneSlot, index) => {
     oneSlot.innerText = SLOT_INDEXES[index];
@@ -276,5 +271,6 @@ const init = () => {
 
 init();
 
+console.log(Config);
 
 //await poll();
