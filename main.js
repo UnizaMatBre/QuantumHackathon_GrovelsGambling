@@ -76,6 +76,42 @@ const ITERATIONS = 50;
 const INTERVAL = 50;
 
 
+
+const gradualyChangeDisplayValue = (elementObject, oldValue, change) => {
+  if(change === 0) {
+
+    return Promise.resolve();
+  }
+
+  let iteration = 0;
+
+  return new Promise((resolve) => {
+
+    const intervalHandle = setInterval(() => {
+      iteration++;
+
+      let valueToDisplay = Math.round(
+        oldValue + (change * iteration) / ITERATIONS
+      );
+
+      if(iteration >= ITERATIONS) {
+        valueToDisplay = oldValue + change;
+      }
+
+      TOKEN_WALLET_OUTPUT.value = valueToDisplay;
+
+      if (iteration >= ITERATIONS) {
+        clearInterval(intervalHandle);
+        resolve();
+      }
+
+    }, INTERVAL);
+
+  });
+};
+
+
+
 const changeTokens = (newTokenCount) => {
   if(currentTokenCount == newTokenCount) {
     return Promise.resolve();
@@ -209,11 +245,19 @@ const spin = () => {
 
     if(groverFoundValue === currentTurnData.targetAnswer) {
       displayAnnoucment("Y.O.U  W.O.N");
-      changeTokensBy(currentGains);
+
+      gradualyChangeDisplayValue(
+        TOKEN_WALLET_OUTPUT, currentTokenCount, currentGains
+      );
+      currentTokenCount += currentGains;
     }
     else {
       displayAnnoucment("Y.O.U L.O.S.T");
-      changeTokensBy(-currentTokenBet);
+
+      gradualyChangeDisplayValue(
+        TOKEN_WALLET_OUTPUT, currentTokenCount, -currentTokenBet
+      );
+      currentTokenCount -= currentTokenBet;
     }
 
 
