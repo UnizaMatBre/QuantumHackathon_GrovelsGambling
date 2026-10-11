@@ -38,9 +38,8 @@ let currentGains = 0;
 
 
 const recalculateGains = () => {
-  // I will use linear curve for now
-  // TODO: Replace it with some pretty exponentional curve
-  const currentGainsRate = (26 - currentSwingBet)/13;
+  const swingRatio = 1 - (currentSwingBet / 25);
+  const currentGainsRate = 1.5 * Math.pow(swingRatio, 1.8);
   
   const oldGains = currentGains;
   currentGains = Math.floor(currentGainsRate * currentTokenBet);
