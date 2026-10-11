@@ -11,7 +11,8 @@ const SPIN_BUTTON         = document.getElementById("spin-button");
 const REEL_SLOT_1 = document.getElementById("reel-slot-1");
 const REEL_SLOT_2 = document.getElementById("reel-slot-2");
 const REEL_SLOT_3 = document.getElementById("reel-slot-3");
-const REEL_SLOTS = [REEL_SLOT_1, REEL_SLOT_2, REEL_SLOT_3];
+const REEL_SLOT_4 = document.getElementById("reel-slot-4");
+const REEL_SLOTS = [REEL_SLOT_1, REEL_SLOT_2, REEL_SLOT_3, REEL_SLOT_4];
 
 const STATUS_ANNOUCERS = [ ...document.getElementsByClassName("status-annoucment") ];
 const CORRECT_VALUE_OUTPUT = document.getElementById("correct-value-output");
@@ -21,7 +22,7 @@ const MAX_SWING_BET = 26;
 const MIN_SWING_BET = 1;
 const MIN_TOKEN_BET = 500;
 
-let SLOT_INDEXES = [3, 4, 7];
+let SLOT_INDEXES = [3, 4, 7, 2];
 
 // values
 let currentTokenCount = 5000;
