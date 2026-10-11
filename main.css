@@ -1,8 +1,10 @@
+html, body {
+  background-color: black;
+}
+
 * {
   box-sizing: border-box;
 }
-
-
 
 #gambling-machine-container {
   display: flex;
@@ -10,14 +12,10 @@
   
   border: 9px ridge red;
 
+  background: darkred;
+
   width: 500px;
-  height: 500px;  
-
-  background: rgb(248, 52, 52);
-
-  border-radius: 5px;
-  border-style: groove;
-  border-color: rgb(102,0,51);
+  height: 500px;
 }
 
 .led-display {
@@ -53,34 +51,37 @@
 #token-panel {
   border: 5px outset goldenrod;
   flex-basis: 10%;
-
+  
   display: flex;
   flex-direction: row;
     align-items: center;
+  
+  background: #000;
   
   #token-wallet-output {
     flex: 1 0 75%;
     min-height: 75%;
   }
-}
 
-.has-top-border {
-  border-top: 5px ridge rgb(102,0,51);
+}
+#token-panel .printed-text {
+  color: goldenrod;
 }
 
 #name-panel {
   display: flex;
   justify-content: center;
 
+  background: #000;
+
   font-size: 2.75em;
   font-weight: bolder;
-  color: white;
+  color: gainsboro;
   text-shadow: #ffcc00 1px 0 10px;
+
+  border: 9px outset gainsboro;
 }
 
-#token-panel .printed-text {
-  color: goldenrod;
-}
 
 #slot-panel {
   flex-grow: 1;
@@ -101,12 +102,12 @@
   #slot-reel-panel {
     flex-basis: 50%;
 
-    border-left: 10px ridge rgb(102,0,51);
-
     background-color: gainsboro;
 
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+
+    border: 5px inset gainsboro;
   }
 }
 
