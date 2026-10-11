@@ -45,9 +45,10 @@ const recalculateGains = () => {
   // TODO: Replace it with some pretty exponentional curve
   const currentGainsRate = (26 - currentSwingBet)/13;
   
+  const oldGains = currentGains;
   currentGains = Math.floor(currentGainsRate * currentTokenBet);
   
-  GAINS_OUTPUT.value = currentGains;
+  gradualyChangeDisplayValue(GAINS_OUTPUT, currentGains - oldGains);
 };
 
 TOKEN_BET_INPUT.addEventListener("change", (evt) => {
@@ -77,11 +78,13 @@ const INTERVAL = 50;
 
 
 
-const gradualyChangeDisplayValue = (elementObject, oldValue, change) => {
+const gradualyChangeDisplayValue = (elementObject, change) => {
   if(change === 0) {
 
     return Promise.resolve();
   }
+
+  const oldValue = Number(elementObject.value);
 
   let iteration = 0;
 
@@ -98,7 +101,7 @@ const gradualyChangeDisplayValue = (elementObject, oldValue, change) => {
         valueToDisplay = oldValue + change;
       }
 
-      TOKEN_WALLET_OUTPUT.value = valueToDisplay;
+      elementObject.value = valueToDisplay;
 
       if (iteration >= ITERATIONS) {
         clearInterval(intervalHandle);
@@ -110,42 +113,6 @@ const gradualyChangeDisplayValue = (elementObject, oldValue, change) => {
   });
 };
 
-
-
-const changeTokens = (newTokenCount) => {
-  if(currentTokenCount == newTokenCount) {
-    return Promise.resolve();
-  }
-
-  const startTokenCount = currentTokenCount;
-  const totalDifference = newTokenCount - startTokenCount;
-  let iteration = 0;
-
-  return new Promise((resolve) => {
-    const intervalHandle = setInterval(() => {
-
-      iteration++;
-
-      currentTokenCount = Math.round(startTokenCount + (totalDifference * iteration) / ITERATIONS);
-
-      TOKEN_WALLET_OUTPUT.value = currentTokenCount;
-
-      if (iteration >= ITERATIONS) {
-        currentTokenCount = newTokenCount;
-        TOKEN_WALLET_OUTPUT.value = currentTokenCount;
-
-        clearInterval(intervalHandle);
-        resolve();
-      }
-
-    }, INTERVAL)
-  });
-}
-
-const changeTokensBy = (difference) => {
-
-  return changeTokens(currentTokenCount + difference);
-}
 
 /// ---------------------
 /// --- SPIN HANDLING ---
@@ -246,18 +213,18 @@ const spin = () => {
     if(groverFoundValue === currentTurnData.targetAnswer) {
       displayAnnoucment("Y.O.U  W.O.N");
 
-      gradualyChangeDisplayValue(
-        TOKEN_WALLET_OUTPUT, currentTokenCount, currentGains
-      );
       currentTokenCount += currentGains;
+      gradualyChangeDisplayValue(
+        TOKEN_WALLET_OUTPUT, currentGains
+      );
     }
     else {
       displayAnnoucment("Y.O.U L.O.S.T");
-
-      gradualyChangeDisplayValue(
-        TOKEN_WALLET_OUTPUT, currentTokenCount, -currentTokenBet
-      );
+      
       currentTokenCount -= currentTokenBet;
+      gradualyChangeDisplayValue(
+        TOKEN_WALLET_OUTPUT, -currentTokenBet
+      );
     }
 
 
@@ -270,6 +237,8 @@ const spin = () => {
   .finally(() => {
     isSpinning = false;
     toggleInputs(false);
+
+    console.log("Current Tokens: ", currentTokenCount);
   })
 
 };
@@ -292,6 +261,7 @@ SPIN_BUTTON.addEventListener("click", async () => {
 const init = () => {
   TOKEN_BET_INPUT.value = currentTokenBet;
   SWING_BET_INPUT.value = currentSwingBet;
+  GAINS_OUTPUT.value = 0;
   recalculateGains();
 
   TOKEN_WALLET_OUTPUT.value = currentTokenCount;
