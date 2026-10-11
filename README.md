@@ -137,3 +137,77 @@ In the last row you will see 2 boxes. One on the left will let you set an amount
 - In the future we would like to implement more balanced pricing for buying iterations and create a form of replayability to change it from a gambling machine to a game. Changes from the original version would include some form of incremental “payment” which has to be met within a set of played games, introducing a shop, where players could spend their gold for upgrades, which would allow them to increase betting amount, roll for higher numbers and cosmetics for the gambling machine. We would add a losing condition, when if the player doesn’t have sufficient funds to spin again, they lose and start all over again. 
 
 
+
+# Quantum Coin Flip (Bonus Game)
+ 
+A tiny side game for the Quantum Casino. You stop a spinning coin, your timing rotates a qubit, and one measurement decides where the coin lands. Stop it badly and the quantum gods will laugh at you.
+ 
+## How to play
+ 
+1. Pick a bet (min. 500 tokens) and a side (0 or 1).
+2. Press **Flip !!!** and the coin starts spinning.
+3. Press **Stop !!!** whenever you feel lucky.
+4. The qubit gets measured, the coin lands, and you win or lose.
+**Cheat code:** stopping on your own side = very likely win, but the payout is boring. Stopping on the edge = a coin toss with a juicy payout.
+ 
+## The math
+ 
+Let `t` be how long the coin spun, in seconds. One full spin takes 2 seconds, so:
+ 
+```
+t = time mod 2
+θ = π · t
+```
+ 
+The qubit starts in `|0⟩` and gets rotated by an RY gate:
+ 
+```
+RY(θ)|0⟩ = cos(θ/2)|0⟩ + sin(θ/2)|1⟩
+```
+ 
+One measurement gives:
+ 
+```
+P(0) = cos²(θ/2)
+P(1) = sin²(θ/2) = 1 − P(0)
+```
+ 
+Let `p` be the probability of **your** side. The payout multiplier is:
+ 
+```
+mult = clamp( 0.97 / p , 1 , 100 )
+```
+ 
+- `0.97` is the house edge constant: the casino keeps 3 %, so the expected return is `p · 0.97/p = 0.97`.
+- The multiplier is never below 1 and never above 100.
+Net result of a round:
+ 
+```
+win:   +floor( bet · (mult − 1) )
+loss:  −bet
+```
+ 
+**Examples:**
+ 
+- `t = 0 s`: coin shows 0, `P(0) = 100 %`. Bet on 0 → multiplier 1.00 (no profit). Bet on 1 → multiplier 100.
+- `t = 0.25 s`: `P(0) ≈ 85.4 %`. Bet on 0 → 1.14×. Bet on 1 → 6.62×.
+- `t = 0.5 s`: `P(0) = P(1) = 50 %` → 1.94× for both sides.
+- `t = 1 s`: coin shows 1, same as `t = 0` with the sides swapped.
+## The Bloch sphere view
+ 
+The coin on the screen is the qubit. It spins 180° per second, just like the qubit state rotates around the Y axis of the Bloch sphere.
+ 
+![t = 0 s](docs/bloch_t0.png)
+![t = 0.5 s](docs/bloch_t05.png)
+![t = 1 s](docs/bloch_t1.png)
+ 
+*Left to right: `t = 0 s` (state |0⟩), `t = 0.5 s` (on the equator, 50/50), `t = 1 s` (state |1⟩). Made with bloch.kherb.io.*
+ 
+## Run it
+ 
+- **Web version:** open `coinflip/coinflip.html` in a browser. No server, no installation. The measurement is emulated with the same probabilities as the circuit.
+- **Qiskit version (terminal):** `pip install qiskit qiskit-aer`, then `python coinflip/cf.py`.
+## Files
+ 
+- `coinflip.html`: the game (all-in-one page).
+- `cf.py`: the Qiskit reference implementation and terminal game.
