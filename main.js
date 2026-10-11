@@ -72,38 +72,38 @@ SWING_BET_INPUT.addEventListener("change", (evt) => {
 const CHANGE_BY = 2;
 
 
+const ITERATIONS = 50;
+const INTERVAL = 50;
+
 
 const changeTokens = (newTokenCount) => {
   if(currentTokenCount == newTokenCount) {
-    return;
+    return Promise.resolve();
   }
 
-  const actualChangeBy = (currentTokenCount < newTokenCount) ? CHANGE_BY : -CHANGE_BY;
-  let remainingDifference = difference(currentTokenCount, newTokenCount);
-  
-  // this is here to allow us wait until we are done
-  const tokenChangePromise = new Promise((resolve) => {
+  const startTokenCount = currentTokenCount;
+  const totalDifference = newTokenCount - startTokenCount;
+  let iteration = 0;
 
+  return new Promise((resolve) => {
+    const intervalHandle = setInterval(() => {
 
-    let intervalHandle = setInterval(() => {
-      currentTokenCount += actualChangeBy;
-      remainingDifference -= CHANGE_BY;
-      
-      if(remainingDifference <= 0) {
-        currentTokenCount = newTokenCount; 
-        
-        clearInterval(intervalHandle);
+      iteration++;
+
+      currentTokenCount = Math.round(startTokenCount + (totalDifference * iteration) / ITERATIONS);
+
+      TOKEN_WALLET_OUTPUT.value = currentTokenCount;
+
+      if (iteration >= ITERATIONS) {
+        currentTokenCount = newTokenCount;
         TOKEN_WALLET_OUTPUT.value = currentTokenCount;
+
+        clearInterval(intervalHandle);
         resolve();
       }
 
-      TOKEN_WALLET_OUTPUT.value = currentTokenCount;
-    }, 10);
-
-
+    }, INTERVAL)
   });
-
-  return tokenChangePromise;
 }
 
 const changeTokensBy = (difference) => {
