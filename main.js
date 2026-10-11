@@ -1,3 +1,5 @@
+import { run_grover } from "./grover_emulation.js";
+
 // component objects
 const TOKEN_BET_INPUT     = document.getElementById("token-bet-input");
 const SWING_BET_INPUT     = document.getElementById("swing-bet-input");
@@ -112,6 +114,31 @@ const changeTokens = (newTokenCount) => {
 /// ---------------------
 /// --- SPIN HANDLING ---
 
+let currentTurn_QubitCount = -1;
+let currentTurn_TargetAnswer = -1;
+
+
+
+const rollNextTurn = () => {
+  // generate number in range <05; 10>
+  const qubitCount = Math.floor(
+    (Math.random() * 6) + 5
+  );
+  
+  const maxPossibleAnswer = 2**qubitCount;
+
+  // generate number in range of possible answer for n qubits
+  const targetAnswer = Math.floor(
+    Math.random() * maxPossibleAnswer
+  ); 
+
+  return {
+    qubitCount, targetAnswer
+  };
+}
+
+
+
 const toggleInputs = (state) => {
   SPIN_BUTTON.disabled = state;
   TOKEN_BET_INPUT.disabled = state;
@@ -124,6 +151,11 @@ const spin = () => {
   isSpinning = true;
   toggleInputs(true);
 
+  const currentTurnData = rollNextTurn();
+
+
+
+
   let intervalHandler = setInterval(() => {
     SLOT_INDEXES = SLOT_INDEXES.map((val) => (val + 1) % 10);
 
@@ -132,11 +164,52 @@ const spin = () => {
     });
     
   }, 80);
+
+
+  var groverResult = run_grover(
+    [currentTurnData.targetAnswer],
+    currentTurnData.qubitCount,
+    currentSwingBet
+  );
+
+
+  groverResult.then((groverFoundValue) => {
+    clearInterval(intervalHandler);
+
+    const digits = String(groverFoundValue)
+      .padStart(REEL_SLOTS.length, "0")
+      .slice(-REEL_SLOTS.length)
+      .split("")
+      .map(Number);
+
+
+    SLOT_INDEXES = digits;
+
+    REEL_SLOTS.forEach((oneSlot, index) => {
+      oneSlot.innerText = digits[index];
+    });
+
+
+  })
+  .catch((error) => {
+    console.log(error);
+
+    clearInterval(intervalHandler);
+  })
+  .finally(() => {
+    isSpinning = false;
+    toggleInputs(false);
+  })
+
 };
 
 
 SPIN_BUTTON.addEventListener("click", async () => {
-    spin();
+  if(isSpinning) {
+    return;
+  }
+
+  spin();
 });
 
 
