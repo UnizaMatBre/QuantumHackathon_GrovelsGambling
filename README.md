@@ -157,7 +157,7 @@ In the last row you will see 2 boxes. One on the left will let you set an amount
 - **credits:** your balance. It starts at 5000 and changes after every round (a win adds the possible win, a loss subtracts the bet).
 - **(3.) Token bet:** how many tokens you risk in one round. It has to be between the minimum bet (500) and your current balance.
 - **(4.) Iterations (swing) bet:** how many Grover iterations you buy, from 1 to 25. More iterations give a higher chance of finding the number, but a lower payout.
-- **(2.) Possible win:** how many tokens you gain if you win. It updates whenever the bet or the iterations change. It grows with a bigger bet and fewer iterations (currently `bet × (25 − iterations) / 13`, rounded down). If you lose, you lose the bet.
+- **(2.) Possible win:** how many tokens you gain if you win. It updates whenever the bet or the iterations change. It grows with a bigger bet and fewer iterations (currently `bet × 1.5 × (1 − iterations / 25)^1.8`, rounded down, and 0 for 25 or more iterations). If you lose, you lose the bet.
 - **Correct number:** the hidden number the algorithm is searching for. A new random number is picked every round (between 0 and 2ⁿ − 1, where `n` = 5 to 10 qubits).
 - **Reels (4 digits):** they spin while the algorithm is "computing" and then stop on the number it found. If it matches the correct number, you win.
 - **(1.) Status boxes:** two boxes, they are empty during the round, then show `W.I.N` if the found number equals the correct number, or `L.O.S.S` if it does not.
@@ -166,6 +166,20 @@ In the last row you will see 2 boxes. One on the left will let you set an amount
 
 ## Future improvements
 - In the future we would like to implement more balanced pricing for buying iterations and create a form of replayability to change it from a gambling machine to a game. Changes from the original version would include some form of incremental “payment” which has to be met within a set of played games, introducing a shop, where players could spend their gold for upgrades, which would allow them to increase betting amount, roll for higher numbers and cosmetics for the gambling machine. We would add a losing condition, when if the player doesn’t have sufficient funds to spin again, they lose and start all over again. 
+
+## Files
+
+- `index.html`: the main page of the Quantum Casino (the slot machine layout).
+- `main.js`: game logic: bets, payout calculation, spinning reels, win or loss handling.
+- `main.css`: styling of the page.
+- `config.js`: game settings (starting tokens, minimum bet, iteration limits, animation speed).
+- `tools.js`: small helper functions used by `main.js`.
+- `grover_emulation.js`: the Grover's algorithm emulation used by the web game.
+- `grover/`: the Python / Qiskit reference implementation of Grover's algorithm.
+- `coinflip/`: the bonus game, Quantum Coin Flip (see its section below).
+- `docs/`: images used in this README (circuit, graph, screenshots).
+- `requirements.txt`: Python dependencies for the Qiskit code.
+- `LICENSE`: project license.
 
 
 
