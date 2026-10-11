@@ -68,25 +68,40 @@
     </div>
   </div>
 
-  <button id="spin-button." class="ordinary-btn"><span>Flip !!!</span></button>
+  <button id="spin-button" class="ordinary-btn"><span>Flip !!!</span></button>
 
   <div id="fields">
     <div class="field"><label>Tokens</label><output id="wallet" class="led-display">5000</output></div>
-    <div class="field"><label>Výsledok</label><output id="result" class="led-display">.....</output></div>
-    <div class="field"><label for="bet">Stávka</label><input id="bet" class="led-display" type="number" value="500"></div>
-    <div class="field"><label for="side">Strana (0 / 1)</label><input id="side" min="0" max="1" step="1" class="led-display" type="number" value="0"></div>
-    <div class="field"><label>Šanca</label><output id="chance" class="led-display">.....</output></div>
-    <div class="field"><label>Možná výhra</label><output id="gains" class="led-display">.....</output></div>
+    <div class="field"><label>Result</label><output id="result" class="led-display">.....</output></div>
+    <div class="field"><label for="bet">Bet</label><input id="bet" class="led-display" type="number" value="500"></div>
+    <div class="field"><label for="side">Side (0 / 1)</label><input id="side" min="0" max="1" step="1" class="led-display" type="number" value="0"></div>
+    <div class="field"><label>Chance</label><output id="chance" class="led-display">.....</output></div>
+    <div class="field"><label>Potential Win</label><output id="gains" class="led-display">.....</output></div>
   </div>
 
 </div>
-
 <script>
   const $ = id => document.getElementById(id);
   const coin = $("coin"), btn = $("spin-button"), label = btn.querySelector("span");
   const MIN_BET = 500;
+  const EDGE = 0.97;      // house edge: expected return is 97 % of the bet
+  const MAX_MULT = 100;
 
   let wallet = 5000, start = null, raf = null;
+
+  // ---- Quantum round (browser emulation of a one-qubit circuit) ----
+  // Circuit: |0> -> RY(theta) -> measure.  P(0) = cos^2(theta / 2).
+  // Same math as the Qiskit version in cf.py, only the measurement is
+  // sampled with Math.random() instead of Qiskit's AerSimulator.
+  function playRound(casMs, side) {
+    const t = (casMs / 1000) % 2;            // one full coin spin = 2 s
+    const theta = t * Math.PI;               // rotation angle of the qubit
+    const p0 = Math.cos(theta / 2) ** 2;     // probability of measuring 0
+    const pMine = side === 0 ? p0 : 1 - p0;
+    const mult = Math.max(1, Math.min(Math.round(EDGE / Math.max(pMine, 1e-9) * 100) / 100, MAX_MULT));
+    const landed = Math.random() < p0 ? 0 : 1;   // one measurement (1 shot)
+    return { landed, won: landed === side, mult, pMine };
+  }
 
   const clamp = (el, min, max) => {
     const v = Math.min(Math.max(Math.round(Number(el.value) || min), min), max);
@@ -99,11 +114,10 @@
   function tick() {
     const t = ((performance.now() - start) / 1000) % 2;
     coin.style.transform = `rotateY(${t * 180}deg)`;
-
     raf = requestAnimationFrame(tick);
   }
 
-  async function stop() {
+  function stop() {
     cancelAnimationFrame(raf);
     const casMs = performance.now() - start;
     start = null;
@@ -111,30 +125,23 @@
     label.textContent = "...";
     const bet = Number($("bet").value), side = Number($("side").value);
 
-    try {
-      const r = await fetch("/api/kolo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cas_ms: casMs, strana: side }),
-      });
-      if (!r.ok) throw new Error();
-      const d = await r.json();
+    const d = playRound(casMs, side);
+    const net = Math.floor(bet * (d.mult - 1));
 
+    $("chance").value = (d.pMine * 100).toFixed(1) + "%";
+    $("gains").value = net;
+
+    setTimeout(() => {
       coin.classList.add("settle");
-      coin.style.transform = `rotateY(${720 + (d.padlo === 1 ? 180 : 0)}deg)`;
+      coin.style.transform = `rotateY(${720 + (d.landed === 1 ? 180 : 0)}deg)`;
 
       setTimeout(() => {
-        const net = Math.floor(bet * (d.mult - 1));
-        if (d.vyhral) { wallet += net; $("result").value = "WON +" + net; }
-        else          { wallet -= bet; $("result").value = "LOST -" + bet; }
+        if (d.won) { wallet += net; $("result").value = "WON +" + net; }
+        else       { wallet -= bet; $("result").value = "LOST -" + bet; }
         showWallet();
-        $("gains").value = ".....";
         done();
       }, 950);
-    } catch {
-      $("result").value = "NO SERVER";
-      done();
-    }
+    }, 1500);
   }
 
   function done() {
