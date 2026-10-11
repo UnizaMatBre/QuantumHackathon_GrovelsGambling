@@ -30,12 +30,22 @@
   }
 }
 
+.has-top-border {
+  border-top: 5px ridge rgb(102,0,51);
+}
+
+#name-panel {
+  display: flex;
+  justify-content: center;
+
+  font-size: 2.75em;
+  font-weight: bolder;
+  color: white;
+  text-shadow: #ffcc00 1px 0 10px;
+}
+
 #slot-panel {
   flex-grow: 1;
-
-
-  border-top: 5px ridge rgb(102,0,51);
-  border-bottom: 5px ridge rgb(102,0,51);
   
   display: flex;
   flex-direction: row;
