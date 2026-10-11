@@ -116,6 +116,24 @@ The web game runs the same probability model in JavaScript (`grover_emulation.js
 - More iterations means a higher chance of winning, but a lower payout.
 - There is a sweet spot. Beyond it, buying more iterations makes the chance of winning *smaller*, and the game does not warn the player.
 
+## Challenges
+ 
+- **Understanding Grover's algorithm quickly.** We learned it just before the hackathon and had to turn it into a game within a few days.
+- **Making overcooking fair and invisible.** The player should feel safe buying more iterations, while the casino keeps a mathematical edge.
+- **Pricing.** A payout that does not depend on the number of qubits gives the player an advantage in some settings. We solved this with a probability-based pricing model (GeoGebra) that ties the payout to the real win chance.
+- **Connecting three worlds:** Python/Qiskit, the mathematical model, and the JavaScript frontend.
+
+
 
 ## User Interface
+- Once you open up the application, you will see multiple “boxes”. 
+From the top, the first one shows you how much money you have. At the beginning, you will have 5000 money, which you will spend to play.
+In the next row to the left, you will see 2 blank boxes and in between of them will be a number. The number shows the correct number, which you want to guess. If it guesses it right, those blank boxes will display a message “W.I.N”, if you lose, it will show “L.O.S.S”. In the same row but on the right you can see a box, which displays the number which you are rolling. 
+In the next row you will see a big button, which when pressed will start the machine. In the row underneath the button you will see how much money you will win.
+In the last row you will see 2 boxes. One on the left will let you set an amount you are willing to bet. In the box on the right you are able to set an amount of iterations you want to make. The amount you win is dependent on how much you wager and how few iterations you make. Fewer iterations mean smaller chance to win, but will make you win more.
+
+
+## Future improvements
+- In the future we would like to implement more balanced pricing for buying iterations and create a form of replayability to change it from a gambling machine to a game. Changes from the original version would include some form of incremental “payment” which has to be met within a set of played games, introducing a shop, where players could spend their gold for upgrades, which would allow them to increase betting amount, roll for higher numbers and cosmetics for the gambling machine. We would add a losing condition, when if the player doesn’t have sufficient funds to spin again, they lose and start all over again. 
+
 
