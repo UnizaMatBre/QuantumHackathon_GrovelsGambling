@@ -1,3 +1,12 @@
+@font-face {
+  font-family: tEggst;
+  src: url(fonts/tEggst-Regular.otf) format("opentype"), url(fonts/tEggst-Regular.woff) format("woff");
+}
+
+html, body {
+  background-color: black;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -106,7 +115,6 @@
   background: #111;
   color: #ff3b30;
 
-  font: bold 1.25em "Courier New";
   text-align: end;
 
   display: inline-flex;
@@ -114,6 +122,14 @@
   justify-content: right;
 
   letter-spacing: 10px;
+}
+
+.led-display::before {
+  content: attr(content);
+  position: inherit;
+  color: gray;
+  
+  font-feature-settings: "ss01";
 }
 
 .led-display:disabled {
