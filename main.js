@@ -71,8 +71,6 @@ SWING_BET_INPUT.addEventListener("change", (evt) => {
 /// -------------------------------
 /// --- TOKEN COUNTER HANDLING ---
 
-const CHANGE_BY = 2;
-
 
 const ITERATIONS = 50;
 const INTERVAL = 50;
@@ -120,9 +118,6 @@ const gradualyChangeDisplayValue = (elementObject, change) => {
 
 /// ---------------------
 /// --- SPIN HANDLING ---
-
-let currentTurn_QubitCount = -1;
-let currentTurn_TargetAnswer = -1;
 
 
 
