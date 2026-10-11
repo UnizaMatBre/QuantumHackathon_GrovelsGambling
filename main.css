@@ -8,6 +8,8 @@
   display: flex;
   flex-direction: column;
   
+  border: 9px ridge red;
+
   width: 500px;
   height: 500px;  
 
@@ -18,12 +20,43 @@
   border-color: rgb(102,0,51);
 }
 
+.led-display {
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: rgb(255 0 0);
+  
+  padding: 12px 18px;
+  background: #111;
+  color: #ff3b30;
+  text-shadow: 0 0 8px currentColor;
+
+  font: bold 1.25em "Courier New";
+  text-align: end;
+
+  display: inline-flex;
+  align-items: center; 
+  justify-content: right;
+
+  letter-spacing: 10px;
+}
+
+.led-display:disabled {
+  color: gray;
+}
+
+.printed-text{
+  font: bold 1.25em "Courier New";
+  text-align: start;
+  vertical-align: middle;
+}
+
 #token-panel {
+  border: 5px outset goldenrod;
   flex-basis: 10%;
 
   display: flex;
   flex-direction: row;
-
+  
   #token-wallet-output {
     flex: 1;
     min-height: 0;
@@ -44,22 +77,24 @@
   text-shadow: #ffcc00 1px 0 10px;
 }
 
+#token-panel .printed-text {
+  color: goldenrod;
+}
+
 #slot-panel {
   flex-grow: 1;
   
   display: flex;
   flex-direction: row;
-
+  
   #result-panel {
     flex-basis: 50%;
-
+    
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     gap: 5px;
 
     padding: 10px 5px 10px 25px;
-
-
   }
   
   #slot-reel-panel {
@@ -72,11 +107,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
-
-
-
 }
-
 
 .reel-slot {
   display: flex;
@@ -84,19 +115,12 @@
   justify-content: center;
   align-items: center;
 
-  font-size: 2em;
+  font-size: 3em;
 
   border-left: 1px solid black;
 
   overflow: hidden;
 }
-
-
-
-.reel-digit {
-  
-}
-
 
 #control-panel {
   
@@ -121,41 +145,12 @@
 
 
 
-.led-display {
-  border-width: 2px;
-  border-radius: 10px;
-  border-style: groove;
-  border-color: rgb(255 0 0);
-  
-  padding: 12px 18px;
-  background: #111;
-  color: #ff3b30;
-
-  font: bold 1.25em "Courier New";
-  text-align: end;
-
-  display: inline-flex;
-  align-items: center; 
-  justify-content: right;
-
-  letter-spacing: 10px;
-}
-
-.led-display:disabled {
-  color: gray;
-}
-
-.led-input {
-  color: white;
-
-}
-
 @keyframes brightness-pulse {
   0%, 100% {
-    text-shadow: 0 0 0 transparent;
+    text-shadow: 0 0 8 transparent;
   }
   50% {
-    text-shadow: 0 0 8px currentColor;
+    text-shadow: 0 0 16px currentColor;
   }
 }
 
