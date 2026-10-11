@@ -89,6 +89,8 @@ const gradualyChangeDisplayValue = (elementObject, change) => {
 
   let iteration = 0;
 
+  elementObject.classList.add("text-pulsing");
+
   return new Promise((resolve) => {
 
     const intervalHandle = setInterval(() => {
@@ -106,6 +108,7 @@ const gradualyChangeDisplayValue = (elementObject, change) => {
 
       if (iteration >= ITERATIONS) {
         clearInterval(intervalHandle);
+        elementObject.classList.remove("text-pulsing");
         resolve();
       }
 
