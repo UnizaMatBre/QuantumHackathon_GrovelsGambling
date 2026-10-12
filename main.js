@@ -233,7 +233,6 @@ const spin = () => {
 
 };
 
-
 SPIN_BUTTON.addEventListener("click", async () => {
   if(isSpinning) {
     return;
@@ -241,12 +240,6 @@ SPIN_BUTTON.addEventListener("click", async () => {
 
   spin();
 });
-
-
-
-
-
-
 
 const init = () => {
   TOKEN_BET_INPUT.value = currentTokenBet;
@@ -270,6 +263,6 @@ const init = () => {
 
 init();
 
-console.log(Config);
+console.log(JSON.stringify(Config));
 
-//await poll();
+await new Promise(() => {});
