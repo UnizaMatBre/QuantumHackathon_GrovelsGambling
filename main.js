@@ -1,6 +1,6 @@
 import Config from "./config.js";
 import { difference, mustBeBetween } from "./tools.js";
-import { run_grover } from "./grover_emulation.js";
+import * as grover from "grover.grover";
 
 // component objects
 const TOKEN_BET_INPUT     = document.getElementById("token-bet-input");
@@ -175,7 +175,7 @@ const spin = () => {
   }, 80);
 
 
-  var groverResult = run_grover(
+  var groverResult = grover.grover.callPromising(
     [currentTurnData.targetAnswer],
     currentTurnData.qubitCount,
     currentSwingBet
@@ -185,7 +185,7 @@ const spin = () => {
   groverResult.then((groverFoundValue) => {
     clearInterval(intervalHandler);
 
-    const digits = String(groverFoundValue)
+    const digits = String(groverFoundValue.toJs())
       .padStart(REEL_SLOTS.length, "0")
       .slice(-REEL_SLOTS.length)
       .split("")
