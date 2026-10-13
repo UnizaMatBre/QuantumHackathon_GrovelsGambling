@@ -176,6 +176,7 @@ const spin = () => {
 
 
   var groverResult = grover.grover.callPromising(
+    backend,
     [currentTurnData.targetAnswer],
     currentTurnData.qubitCount,
     currentSwingBet
@@ -183,9 +184,11 @@ const spin = () => {
 
 
   groverResult.then((groverFoundValue) => {
+    console.log(currentTurnData.targetAnswer + ": " + currentTurnData.targetAnswer.toString(2));
+    console.log(JSON.stringify(groverFoundValue.toJs()));
     clearInterval(intervalHandler);
-
-    const digits = String(groverFoundValue.toJs())
+    
+    const digits = String(groverFoundValue)
       .padStart(REEL_SLOTS.length, "0")
       .slice(-REEL_SLOTS.length)
       .split("")
